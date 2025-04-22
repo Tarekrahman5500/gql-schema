@@ -14,11 +14,22 @@ export class CoffeeCreateInput {
     flavors: string[];
 }
 
+export class CoffeeUpdateInput {
+    name?: Nullable<string>;
+    brand?: Nullable<string>;
+    flavors?: Nullable<string[]>;
+}
+
 export class Coffee {
     id: number;
     name: string;
     brand: string;
-    flavors: string[];
+    flavors?: Nullable<Flavor[]>;
+}
+
+export class Flavor {
+    id: number;
+    name: string;
 }
 
 export abstract class IQuery {
@@ -28,6 +39,7 @@ export abstract class IQuery {
 
 export abstract class IMutation {
     coffeeCreate?: Coffee;
+    coffeeUpdate?: Coffee;
 }
 
 type Nullable<T> = T | null;

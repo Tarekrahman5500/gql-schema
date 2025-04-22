@@ -29,7 +29,17 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
-    },
-  },
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+       '@typescript-eslint/interface-name-prefix': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ImportDeclaration[source.value=/graphql-types/] > ImportSpecifier',
+          message: 'Named imports are not allowed for "graphql-types" imports. Use "import * as GraphQLTypes [...]" instead.',
+        }
+      ]
+    }
+  }
 );
