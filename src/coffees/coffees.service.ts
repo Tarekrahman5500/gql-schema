@@ -6,6 +6,7 @@ import { UserInputError } from 'apollo-server-express';
 import { CreateCoffeeInput } from './dto/create-coffee.input';
 import { UpdateCoffeeInput } from './dto/update-coffee.input';
 import { Flavor } from './entities/flavor.entity';
+import { PubSub } from 'graphql-subscriptions';
 
 @Injectable()
 export class CoffeesService {
@@ -14,6 +15,7 @@ export class CoffeesService {
     private readonly coffeesRepository: Repository<Coffee>,
     @InjectRepository(Flavor)
     private readonly flavorsRepository: Repository<Flavor>,
+    private readonly pubSub: PubSub,
   ) {}
 
   async findAll(): Promise<Coffee[]> {
@@ -38,7 +40,11 @@ export class CoffeesService {
       ...coffeeCreateInput,
       flavors,
     });
-    return this.coffeesRepository.save(coffee);
+    const newCoffee = await this.coffeesRepository.save(coffee);
+    this.pubSub
+      .publish('coffeeAdded', { coffeeAdded: newCoffee })
+      .catch((err) => console.error('PubSub publish error:', err));
+    return newCoffee;
   }
 
   // now modify the update function to use the findOrCreateFlavor function

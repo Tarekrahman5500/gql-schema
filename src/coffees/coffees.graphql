@@ -1,9 +1,24 @@
-type Coffee {
+scalar Date
+
+type Coffee implements Drink {
 
     id: ID!
     name: String!
     brand: String!
     flavors: [Flavor!]
+    createdAt: Date
+}
+
+interface Drink {
+
+    name: String!
+
+}
+
+type Tea implements Drink {
+
+    name: String!
+
 }
 
 # now create type of Flavor has id and name
@@ -12,17 +27,25 @@ type Flavor {
     name: String!
 }
 
+union DrinksUnion = Coffee | Tea
+
 
 type Query {
 
     coffees: [Coffee!]!
     coffee(id: ID!): Coffee
+    drinks: [Drink!]!
 }
 
 type Mutation {
 
     coffeeCreate(coffeeCreateInput: CoffeeCreateInput!): Coffee!
     coffeeUpdate(id: ID!, coffeeUpdateInput: CoffeeUpdateInput!): Coffee!
+}
+
+type Subscription {
+
+    coffeeAdded: Coffee!
 }
 
 input CoffeeCreateInput {

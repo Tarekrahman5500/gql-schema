@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -7,6 +8,7 @@ import {
 } from 'typeorm';
 import * as GraphQLTypes from '../../graphql-types';
 import { Flavor } from './flavor.entity';
+
 @Entity()
 export class Coffee implements GraphQLTypes.Coffee {
   @PrimaryGeneratedColumn('increment')
@@ -17,6 +19,9 @@ export class Coffee implements GraphQLTypes.Coffee {
   brand: string;
   // now join the flavors with falvor relation m-m relation
   @JoinTable()
-  @ManyToMany(() => Flavor, (flavor) => flavor.coffees)
+  @ManyToMany(() => Flavor, (flavor) => flavor.coffees, { cascade: true })
   flavors?: Flavor[];
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt?: Date | null;
 }
